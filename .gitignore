@@ -1,0 +1,65 @@
+# ==============================================================================
+# Nexus ERP - Blindaje de Seguridad (Cero Secretos en Git)
+# ==============================================================================
+
+# 1. Archivos de entorno reales (excepto la plantilla .env.example)
+.env
+.env.*
+!.env.example
+
+# 2. Archivos de acceso a clústeres de Kubernetes
+*kubeconfig*
+*.kubeconfig
+.kube/
+
+# 3. Certificados y llaves privadas
+*.pem
+*.key
+*.crt
+*.p12
+/storage/*.key
+
+# 4. Respaldos y dumps de bases de datos
+*.sql
+*.dump
+*.bak
+*.tar.gz
+*.zip
+backups/
+
+# 5. Dependencias, artefactos de compilación y caché de Laravel
+/node_modules
+/vendor
+/.vite
+/public/build
+/public/hot
+/public/storage
+/storage/pail
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/framework/cache/data/*
+!/storage/framework/cache/data/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/storage/framework/*.php
+/bootstrap/cache/*.php
+/bootstrap/cache/*.tmp
+!.gitignore
+
+# 6. Entorno de desarrollo e IDEs
+*.log
+.DS_Store
+Thumbs.db
+.phpactor.json
+.phpunit.result.cache
+/.fleet
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
+Homestead.json
+Homestead.yaml

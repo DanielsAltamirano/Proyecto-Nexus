@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class TransferItem extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'transfer_id',
+        'product_id',
+        'batch_id',
+        'quantity_requested',
+        'quantity_sent',
+        'quantity_received',
+    ];
+
+    public function transfer()
+    {
+        return $this->belongsTo(Transfer::class);
+    }
+
+    public function batch()
+    {
+        return $this->belongsTo(Batch::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+}

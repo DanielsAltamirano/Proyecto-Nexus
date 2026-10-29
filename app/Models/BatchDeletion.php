@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class BatchDeletion extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'product_name',
+        'batch_number',
+        'stock',
+        'user_id',
+        'reason',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class)->withTrashed();
+    }
+}

@@ -1,0 +1,333 @@
+{
+	"info": {
+		"_postman_id": "nexus-erp-api-v1-timaster",
+		"name": "Nexus ERP (TIMaster Solutions) - API v1",
+		"description": "Colección completa con los 15 servicios web del proyecto Nexus ERP (TIMaster Solutions) para la revisión de APIs.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01. Auth",
+			"item": [
+				{
+					"name": "Iniciar Sesión (JWT)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@nexuserp.com\",\n    \"password\": \"123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "login"]
+						},
+						"description": "Responsable: Daniels J. Altamirano. Autentica un usuario y genera token JWT."
+					}
+				}
+			]
+		},
+		{
+			"name": "02. CRM - Clientes",
+			"item": [
+				{
+					"name": "Registrar Cliente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Juan\",\n    \"empresa\": \"Devs\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/clientes",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "clientes"]
+						},
+						"description": "Responsable: Daniels J. Altamirano. Agrega un nuevo cliente al módulo CRM."
+					}
+				},
+				{
+					"name": "Actualizar Cliente",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"telefono\": \"4431234567\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/clientes/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "clientes", "1"]
+						},
+						"description": "Responsable: Juan M. Martinez. Modifica los datos de contacto del cliente."
+					}
+				}
+			]
+		},
+		{
+			"name": "03. Ventas",
+			"item": [
+				{
+					"name": "Registrar Venta",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id_cliente\": 1,\n    \"total\": 5400.00\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/ventas",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ventas"]
+						},
+						"description": "Responsable: Gabriel Cazares. Procesa una transacción de venta."
+					}
+				},
+				{
+					"name": "Consultar Venta",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/ventas/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ventas", "1"]
+						},
+						"description": "Responsable: Cristian A. Perez. Obtiene el detalle de una venta específica."
+					}
+				},
+				{
+					"name": "Listar Ventas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/ventas?fecha_inicio=2026-01-01&fecha_fin=2026-12-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "ventas"],
+							"query": [
+								{ "key": "fecha_inicio", "value": "2026-01-01" },
+								{ "key": "fecha_fin", "value": "2026-12-31" }
+							]
+						},
+						"description": "Responsable: Daniels J. Altamirano. Obtiene el historial paginado de ventas."
+					}
+				}
+			]
+		},
+		{
+			"name": "04. Finanzas",
+			"item": [
+				{
+					"name": "Registrar Gasto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"concepto\": \"Luz\",\n    \"monto\": 1200\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/finanzas/gastos",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "finanzas", "gastos"]
+						},
+						"description": "Responsable: Juan M. Martinez. Registra un gasto operativo de la empresa."
+					}
+				},
+				{
+					"name": "Reporte Financiero",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/finanzas/reporte?mes=10&anio=2026",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "finanzas", "reporte"],
+							"query": [
+								{ "key": "mes", "value": "10" },
+								{ "key": "anio", "value": "2026" }
+							]
+						},
+						"description": "Responsable: Gabriel Cazares. Retorna ingresos y egresos del periodo."
+					}
+				}
+			]
+		},
+		{
+			"name": "05. Usuarios",
+			"item": [
+				{
+					"name": "Registrar Usuario",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Ana\",\n    \"rol\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/usuarios",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "usuarios"]
+						},
+						"description": "Responsable: Juan M. Martinez. Añade un nuevo usuario al ERP."
+					}
+				}
+			]
+		},
+		{
+			"name": "06. Proveedores",
+			"item": [
+				{
+					"name": "Registrar Proveedor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"razon_social\": \"Tech SA\",\n    \"rfc\": \"XAXX010101000\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/proveedores",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "proveedores"]
+						},
+						"description": "Responsable: Gabriel Cazares. Da de alta un proveedor en el sistema."
+					}
+				},
+				{
+					"name": "Listar Proveedores",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/proveedores?page=1&limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "proveedores"],
+							"query": [
+								{ "key": "page", "value": "1" },
+								{ "key": "limit", "value": "10" }
+							]
+						},
+						"description": "Responsable: Cristian A. Perez. Obtiene el catálogo de proveedores."
+					}
+				}
+			]
+		},
+		{
+			"name": "07. Inventario",
+			"item": [
+				{
+					"name": "Agregar Producto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Monitor LCD\",\n    \"precio\": 3500\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/inventario/productos",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "inventario", "productos"]
+						},
+						"description": "Responsable: Daniels J. Altamirano. Inserta un registro de producto al inventario."
+					}
+				},
+				{
+					"name": "Consultar Producto",
+					"request": {
+						"method": "GET",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/inventario/productos/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "inventario", "productos", "1"]
+						},
+						"description": "Responsable: Juan M. Martinez. Retorna la información de un producto."
+					}
+				},
+				{
+					"name": "Actualizar Stock",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" },
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cantidad_agregada\": 50\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/inventario/productos/1/stock",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "inventario", "productos", "1", "stock"]
+						},
+						"description": "Responsable: Gabriel Cazares. Modifica las existencias de un producto."
+					}
+				},
+				{
+					"name": "Eliminar Producto (Borrado Lógico)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{ "key": "Accept", "value": "application/json" }
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/inventario/productos/1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "inventario", "productos", "1"]
+						},
+						"description": "Responsable: Cristian A. Perez. Realiza borrado lógico de un producto."
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000"
+		}
+	]
+}

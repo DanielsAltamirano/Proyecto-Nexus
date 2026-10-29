@@ -1,0 +1,1 @@
+User::withTrashed()->where('email', 'vendedor1metales@sucursal.com')->restore();
