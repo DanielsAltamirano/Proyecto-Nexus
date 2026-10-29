@@ -171,7 +171,10 @@
                         @forelse ($batches as $productBatches)
                             @php
                                 $firstBatch = $productBatches->first();
-                                $product = $firstBatch->product;
+                                $product = $firstBatch?->product;
+                                if (!$product) {
+                                    continue;
+                                }
                                 $branch = $firstBatch->branch;
                                 $totalStock = $productBatches->sum('stock');
 

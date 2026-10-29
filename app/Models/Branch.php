@@ -14,6 +14,7 @@ class Branch extends Model
         'address',
         'phone',
         'maps_url',
+        'is_warehouse',
     ];
 
     public function goal()

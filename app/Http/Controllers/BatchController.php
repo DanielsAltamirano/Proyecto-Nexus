@@ -17,6 +17,7 @@ class BatchController extends Controller
         
         $query = Batch::select('batches.*')
             ->join('products', 'batches.product_id', '=', 'products.id')
+            ->whereNull('products.deleted_at')
             ->with(['product', 'branch'])
             ->where('batches.stock', '>', 0)  // Ocultar lotes sin existencias
             ->orderBy('products.name', 'asc')
@@ -69,6 +70,7 @@ class BatchController extends Controller
         if (!$user->hasGlobalInventoryAccess()) {
             $rawExternal = Batch::select('batches.*')
                 ->join('products', 'batches.product_id', '=', 'products.id')
+                ->whereNull('products.deleted_at')
                 ->with(['product', 'branch'])
                 ->where('branch_id', '!=', $user->branch_id)
                 ->whereHas('branch', function($q) {
