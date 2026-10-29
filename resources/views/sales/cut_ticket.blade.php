@@ -124,7 +124,7 @@
         
         <!-- CABECERA -->
         <div class="text-center mb-2">
-            <div class="header-title">FARMACIAS CAMUR</div>
+            <div class="header-title">NEXUS ERP</div>
             <div class="sub-header">Sucursal: {{ $session->branch->name ?? 'N/A' }}</div>
         </div>
 

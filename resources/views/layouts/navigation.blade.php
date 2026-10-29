@@ -6,7 +6,7 @@
             <div class="flex">
                 <div class="shrink-0 flex items-center">
                     <a href="{{ auth()->check() ? route('dashboard') : url('/') }}" class="transition transform hover:scale-105 duration-300">
-                        <img src="{{ asset('img/camur_banner.png') }}" alt="Farmacias Camur" class="h-12 w-auto drop-shadow-sm">
+                        <img src="{{ asset('img/nexusbanner.jpeg') }}" alt="Nexus ERP" class="h-12 w-auto rounded-lg mix-blend-multiply drop-shadow-sm">
                     </a>
                 </div>
 

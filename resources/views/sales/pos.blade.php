@@ -611,21 +611,21 @@
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"></path></svg>
                                         </button>
                                     </div>
-                                    <div class="w-full bg-gradient-to-tr from-emerald-950 via-green-900 to-emerald-950 rounded-2xl shadow-xl relative overflow-hidden text-white flex flex-col p-4 aspect-[2.2]">
-                                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-emerald-500 rounded-full mix-blend-overlay filter blur-xl opacity-40 pointer-events-none"></div>
-                                        <div class="absolute -left-8 -bottom-8 w-24 h-24 bg-teal-500 rounded-full mix-blend-overlay filter blur-xl opacity-40 pointer-events-none"></div>
+                                    <div class="w-full bg-gradient-to-tr from-purple-950 via-purple-900 to-indigo-950 rounded-2xl shadow-xl relative overflow-hidden text-white flex flex-col p-4 aspect-[2.2]">
+                                        <div class="absolute -right-8 -top-8 w-24 h-24 bg-purple-500 rounded-full mix-blend-overlay filter blur-xl opacity-40 pointer-events-none"></div>
+                                        <div class="absolute -left-8 -bottom-8 w-24 h-24 bg-violet-500 rounded-full mix-blend-overlay filter blur-xl opacity-40 pointer-events-none"></div>
 
                                         <!-- Top: Name & Logo -->
                                         <div class="flex justify-between items-start relative z-10 w-full">
                                             <div class="overflow-hidden pr-2">
                                                 <p class="font-bold text-sm tracking-widest uppercase truncate" x-text="clientData?.name"></p>
                                             </div>
-                                            <img src="{{ asset('img/camur_banner.png') }}" class="h-4 object-contain opacity-90 shrink-0">
+                                            <img src="{{ asset('img/nexusbanner.jpeg') }}" alt="Nexus ERP" class="h-4 object-contain rounded opacity-95 shrink-0">
                                         </div>
                                         
                                         <!-- Bottom: Puntos -->
                                         <div class="mt-auto relative z-10">
-                                            <p class="text-[9px] text-green-200 uppercase tracking-widest mb-0.5 opacity-80">Puntos Acumulados</p>
+                                            <p class="text-[9px] text-purple-200 uppercase tracking-widest mb-0.5 opacity-80">Puntos Acumulados</p>
                                             <p class="font-black text-xl text-yellow-400 leading-none truncate" x-text="clientData?.points"></p>
                                         </div>
                                     </div>

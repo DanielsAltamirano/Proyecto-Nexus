@@ -5,8 +5,8 @@
     <title>Orden de Compra #{{ $purchaseOrder->id }}</title>
     <style>
         body { font-family: sans-serif; font-size: 12px; color: #333; }
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #22c55e; padding-bottom: 10px; }
-        .logo { font-size: 24px; font-weight: bold; color: #166534; }
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #7c3aed; padding-bottom: 10px; }
+        .logo { font-size: 24px; font-weight: bold; color: #5b21b6; }
         .info-table { width: 100%; margin-bottom: 20px; }
         .info-table td { padding: 5px; vertical-align: top; }
         .items-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -19,7 +19,7 @@
 </head>
 <body>
     <div class="header">
-        <div class="logo">Farmacias Camur</div>
+        <div class="logo">Nexus ERP</div>
         <h2>ORDEN DE COMPRA</h2>
         <p>Folio: OC-{{ str_pad($purchaseOrder->id, 6, '0', STR_PAD_LEFT) }}</p>
     </div>
@@ -78,7 +78,7 @@
     @endif
 
     <div class="footer">
-        <p>Documento generado por Farmacias Camur el {{ now()->format('d/m/Y H:i') }}</p>
+        <p>Documento generado por Nexus ERP el {{ now()->format('d/m/Y H:i') }}</p>
     </div>
 </body>
 </html>

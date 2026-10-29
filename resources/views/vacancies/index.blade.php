@@ -1,31 +1,31 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="relative overflow-hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-6 transition-all duration-300 hover:shadow-md group">
-            <div class="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-green-50 rounded-full opacity-70 blur-2xl transition-transform duration-700 group-hover:scale-150"></div>
+            <div class="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-purple-50 rounded-full opacity-70 blur-2xl transition-transform duration-700 group-hover:scale-150"></div>
 
             <div class="relative z-10 flex flex-col sm:flex-row justify-between items-center">
                 <div>
-                    <h2 class="font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-green-900 to-green-600 tracking-tight">
+                    <h2 class="font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-purple-600 tracking-tight">
                         Muro de Vacantes
                     </h2>
                     <p class="text-sm text-gray-500 mt-2 flex items-center">
-                        <svg class="w-4 h-4 mr-1.5 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 mr-1.5 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                         </svg>
-                        Únete al equipo de Farmacias CAMUR
+                        Únete al equipo de Nexus ERP
                     </p>
                 </div>
                 @if(auth()->check() && auth()->user()->hasRole(['admin', 'superadmin']))
                     <div class="mt-5 sm:mt-0 flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-end">
                         <a href="{{ route('admin.vacancies.index') }}"
-                            class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-white transition-all duration-300 ease-in-out bg-blue-500 rounded-xl hover:bg-blue-600 hover:-translate-y-1 hover:shadow-lg hover:shadow-blue-400/30 whitespace-nowrap">
+                            class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-white transition-all duration-300 ease-in-out bg-violet-500 rounded-xl hover:bg-violet-600 hover:-translate-y-1 hover:shadow-lg hover:shadow-violet-400/30 whitespace-nowrap">
                             <svg class="w-5 h-5 mr-2 transition-transform duration-300 ease-in-out group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                             </svg>
                             <span>Gestión de Vacantes</span>
                         </a>
                         <a href="{{ route('admin.vacancies.create') }}"
-                            class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-white transition-all duration-300 ease-in-out bg-green-700 rounded-xl hover:bg-green-800 hover:-translate-y-1 hover:shadow-lg hover:shadow-green-500/30 whitespace-nowrap">
+                            class="group relative inline-flex items-center justify-center px-6 py-3 font-bold text-white transition-all duration-300 ease-in-out bg-purple-700 rounded-xl hover:bg-purple-800 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/30 whitespace-nowrap">
                             <svg class="w-5 h-5 mr-2 transition-transform duration-300 ease-in-out group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                             </svg>
@@ -102,12 +102,12 @@
 
                         <div class="p-6">
                             <div class="flex items-start gap-4">
-                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white font-extrabold text-lg shadow-sm flex-shrink-0">
-                                    FC
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-white font-extrabold text-lg shadow-sm flex-shrink-0">
+                                    NX
                                 </div>
                                 <div>
                                     <h3 class="text-xl font-bold text-gray-900">{{ $vacancy->title }}</h3>
-                                    <p class="text-sm text-gray-500">Farmacias CAMUR • {{ $vacancy->created_at->diffForHumans() }}</p>
+                                    <p class="text-sm text-gray-500">Nexus ERP • {{ $vacancy->created_at->diffForHumans() }}</p>
                                 </div>
                             </div>
 
@@ -116,9 +116,9 @@
                             </div>
 
                             @if($vacancy->requirements)
-                            <div class="mt-4 bg-blue-50 border border-blue-100 p-4 rounded-xl">
-                                <h4 class="font-bold text-blue-900 mb-1.5 text-sm">Requisitos:</h4>
-                                <p class="text-sm text-blue-800 whitespace-pre-line">{{ $vacancy->requirements }}</p>
+                            <div class="mt-4 bg-purple-50 border border-purple-100 p-4 rounded-xl">
+                                <h4 class="font-bold text-purple-900 mb-1.5 text-sm">Requisitos:</h4>
+                                <p class="text-sm text-purple-800 whitespace-pre-line">{{ $vacancy->requirements }}</p>
                             </div>
                             @endif
 
@@ -132,14 +132,14 @@
                                     <span class="text-xs bg-gray-100 text-gray-600 font-semibold px-3 py-1 rounded-full">CV requerido (PDF)</span>
                                 </div>
                                 @if(in_array($vacancy->id, $userApplications))
-                                    <span class="inline-flex items-center gap-1.5 bg-green-50 text-green-700 font-bold py-2 px-5 rounded-xl text-sm border border-green-100">
+                                    <span class="inline-flex items-center gap-1.5 bg-purple-50 text-purple-700 font-bold py-2 px-5 rounded-xl text-sm border border-purple-100">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                         Solicitud enviada
                                     </span>
                                 @else
                                     <button
                                         @click="openApplyModal({{ json_encode(['id' => $vacancy->id, 'title' => $vacancy->title]) }}, {{ json_encode($vacancy->form_schema ?? []) }})"
-                                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-xl shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
+                                        class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-xl shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md">
                                         Postularse
                                     </button>
                                 @endif

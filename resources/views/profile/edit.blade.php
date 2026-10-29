@@ -14,22 +14,22 @@
                     <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 flex flex-col items-center">
                         <h3 class="text-lg font-extrabold text-gray-900 w-full mb-6 flex items-center">
                             <svg class="w-5 h-5 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-                            Mi Tarjeta CAMUR
+                            Mi Tarjeta Nexus
                         </h3>
 
                         <!-- Diseño tipo Tarjeta de Crédito -->
-                        <div @click="showZoom = true" class="cursor-pointer w-full max-w-sm aspect-[1.58] bg-gradient-to-tr from-emerald-950 via-green-900 to-emerald-950 rounded-2xl shadow-2xl relative overflow-hidden text-white flex flex-col p-5 transform transition-all duration-300 hover:scale-105 hover:shadow-green-900/20">
+                        <div @click="showZoom = true" class="cursor-pointer w-full max-w-sm aspect-[1.58] bg-gradient-to-tr from-purple-950 via-purple-900 to-indigo-950 rounded-2xl shadow-2xl relative overflow-hidden text-white flex flex-col p-5 transform transition-all duration-300 hover:scale-105 hover:shadow-purple-900/20">
                             <!-- Decoración de fondo de la tarjeta -->
-                            <div class="absolute -right-16 -top-16 w-48 h-48 bg-emerald-500 rounded-full mix-blend-overlay filter blur-3xl opacity-40 pointer-events-none"></div>
-                            <div class="absolute -left-16 -bottom-16 w-48 h-48 bg-teal-500 rounded-full mix-blend-overlay filter blur-3xl opacity-40 pointer-events-none"></div>
+                            <div class="absolute -right-16 -top-16 w-48 h-48 bg-purple-500 rounded-full mix-blend-overlay filter blur-3xl opacity-40 pointer-events-none"></div>
+                            <div class="absolute -left-16 -bottom-16 w-48 h-48 bg-violet-500 rounded-full mix-blend-overlay filter blur-3xl opacity-40 pointer-events-none"></div>
 
                             <!-- Top: Chip y Logo -->
                             <div class="flex justify-between items-start relative z-10 w-full">
                                 <!-- Contactless Icon -->
                                 <div class="flex items-center gap-3">
-                                    <img src="{{ asset('img/camur_banner.png') }}" alt="Camur" class="h-6 object-contain opacity-90">
+                                    <img src="{{ asset('img/nexusbanner.jpeg') }}" alt="Nexus ERP" class="h-6 object-contain rounded opacity-95">
                                 </div>
-                                <svg class="w-6 h-6 text-green-200 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07m-4.243-2.829a1 1 0 11-1.414-1.414 1 1 0 011.414 1.414z"></path></svg>
+                                <svg class="w-6 h-6 text-purple-200 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07m-4.243-2.829a1 1 0 11-1.414-1.414 1 1 0 011.414 1.414z"></path></svg>
                             </div>
 
                             <!-- Middle: Barcode -->
@@ -45,11 +45,11 @@
                             <!-- Bottom: Info -->
                             <div class="flex justify-between items-end relative z-10 w-full mt-auto">
                                 <div class="overflow-hidden">
-                                    <p class="text-[8px] text-green-200 uppercase tracking-widest mb-0.5 opacity-80">Titular de la Tarjeta</p>
+                                    <p class="text-[8px] text-purple-200 uppercase tracking-widest mb-0.5 opacity-80">Titular de la Tarjeta</p>
                                     <p class="font-medium text-xs tracking-widest uppercase truncate max-w-[160px]">{{ $user->name }}</p>
                                 </div>
                                 <div class="text-right flex-shrink-0">
-                                    <p class="text-[8px] text-green-200 uppercase tracking-widest mb-0.5 opacity-80">Puntos</p>
+                                    <p class="text-[8px] text-purple-200 uppercase tracking-widest mb-0.5 opacity-80">Puntos</p>
                                     <p class="font-black text-base text-yellow-400 leading-none">{{ number_format($user->points) }}</p>
                                 </div>
                             </div>
@@ -59,7 +59,7 @@
                         <div class="w-full mt-6 grid grid-cols-2 gap-4">
                             <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex flex-col items-center justify-center">
                                 <span class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Visitas</span>
-                                <span class="text-2xl font-black text-blue-600">{{ number_format($user->visits) }}</span>
+                                <span class="text-2xl font-black text-purple-600">{{ number_format($user->visits) }}</span>
                             </div>
                             <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex flex-col items-center justify-center">
                                 <span class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Puntos</span>
@@ -85,22 +85,22 @@
                                  x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                                  class="inline-block align-bottom bg-transparent text-left overflow-hidden transform transition-all sm:my-8 sm:align-middle w-full max-w-2xl">
                                 
-                                <div class="w-full aspect-[1.3] sm:aspect-[1.58] bg-gradient-to-tr from-emerald-950 via-green-900 to-emerald-950 rounded-2xl sm:rounded-3xl shadow-2xl relative overflow-hidden text-white flex flex-col p-5 sm:p-10">
+                                <div class="w-full aspect-[1.3] sm:aspect-[1.58] bg-gradient-to-tr from-purple-950 via-purple-900 to-indigo-950 rounded-2xl sm:rounded-3xl shadow-2xl relative overflow-hidden text-white flex flex-col p-5 sm:p-10">
                                     <button @click="showZoom = false" class="absolute top-2 right-2 sm:top-4 sm:right-4 text-white/50 hover:text-white z-50 p-2">
                                         <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                                     </button>
 
                                     <!-- Decoración de fondo de la tarjeta ampliada -->
-                                    <div class="absolute -right-24 -top-24 w-72 h-72 bg-emerald-500 rounded-full mix-blend-overlay filter blur-3xl opacity-40 pointer-events-none"></div>
-                                    <div class="absolute -left-24 -bottom-24 w-72 h-72 bg-teal-500 rounded-full mix-blend-overlay filter blur-3xl opacity-40 pointer-events-none"></div>
+                                    <div class="absolute -right-24 -top-24 w-72 h-72 bg-purple-500 rounded-full mix-blend-overlay filter blur-3xl opacity-40 pointer-events-none"></div>
+                                    <div class="absolute -left-24 -bottom-24 w-72 h-72 bg-violet-500 rounded-full mix-blend-overlay filter blur-3xl opacity-40 pointer-events-none"></div>
 
                                     <!-- Top: Chip y Logo -->
                                     <div class="flex justify-between items-start relative z-10 w-full">
                                         <!-- Contactless Icon -->
                                         <div class="flex items-center gap-4">
-                                            <img src="{{ asset('img/camur_banner.png') }}" alt="Camur" class="h-7 sm:h-10 object-contain opacity-90">
+                                            <img src="{{ asset('img/nexusbanner.jpeg') }}" alt="Nexus ERP" class="h-7 sm:h-10 object-contain rounded opacity-95">
                                         </div>
-                                        <svg class="w-7 h-7 sm:w-10 sm:h-10 text-green-200 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07m-4.243-2.829a1 1 0 11-1.414-1.414 1 1 0 011.414 1.414z"></path></svg>
+                                        <svg class="w-7 h-7 sm:w-10 sm:h-10 text-purple-200 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07m-4.243-2.829a1 1 0 11-1.414-1.414 1 1 0 011.414 1.414z"></path></svg>
                                     </div>
 
                                     <!-- Middle: Barcode -->
@@ -112,11 +112,11 @@
                                     <!-- Bottom: Info -->
                                     <div class="flex justify-between items-end relative z-10 w-full mt-auto">
                                         <div class="overflow-hidden">
-                                            <p class="text-[10px] sm:text-xs text-green-200 uppercase tracking-widest mb-1 opacity-80">Titular de la Tarjeta</p>
+                                            <p class="text-[10px] sm:text-xs text-purple-200 uppercase tracking-widest mb-1 opacity-80">Titular de la Tarjeta</p>
                                             <p class="font-medium text-base sm:text-xl tracking-widest uppercase truncate max-w-[200px] sm:max-w-[300px]">{{ $user->name }}</p>
                                         </div>
                                         <div class="text-right flex-shrink-0">
-                                            <p class="text-[10px] sm:text-xs text-green-200 uppercase tracking-widest mb-1 opacity-80">Puntos</p>
+                                            <p class="text-[10px] sm:text-xs text-purple-200 uppercase tracking-widest mb-1 opacity-80">Puntos</p>
                                             <p class="font-black text-2xl sm:text-3xl text-yellow-400 leading-none">{{ number_format($user->points) }}</p>
                                         </div>
                                     </div>

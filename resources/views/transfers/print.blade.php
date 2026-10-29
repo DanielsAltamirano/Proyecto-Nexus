@@ -95,7 +95,7 @@
     <div class="container">
         <div class="header">
             <div>
-                <img src="{{ asset('img/camur_banner.png') }}" style="height: 45px; filter: grayscale(100%) contrast(1.2); margin-bottom: 15px;" alt="Farmacias CAMUR">
+                <img src="{{ asset('img/nexusbanner.jpeg') }}" style="height: 45px; filter: grayscale(100%) contrast(1.2); margin-bottom: 15px;" alt="Nexus ERP">
                 <h1 class="title">Guía de Traspaso</h1>
                 <p style="margin: 5px 0 0 0; font-size: 18px;"><strong>#TR-{{ str_pad($transfer->id, 5, '0', STR_PAD_LEFT) }}</strong></p>
             </div>

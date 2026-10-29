@@ -171,7 +171,7 @@
 
         <!-- CABECERA -->
         <div class="header text-center">
-            <h1 class="uppercase">Farmacias CAMUR</h1>
+            <h1 class="uppercase">Nexus ERP</h1>
             <div>Ticket: <span class="bold">{{ $receipt_id }}</span></div>
             <div>Fecha: {{ $date }}</div>
         </div>
