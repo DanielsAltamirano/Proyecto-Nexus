@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env bash
+#!/usr/bin/env bash
 # ==============================================================================
 # build-images.sh - ConstrucciÃ³n, publicaciÃ³n e impresiÃ³n de Digest SHA256
 # Uso: ./scripts/build-images.sh <usuario_dockerhub_o_ghcr> [version]
