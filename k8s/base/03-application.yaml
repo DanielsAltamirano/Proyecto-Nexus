@@ -298,9 +298,8 @@ spec:
               mountPath: /var/www/html/storage
             - name: bootstrap-cache
               mountPath: /var/www/html/bootstrap/cache
-            - name: nginx-conf
+            - name: nginx-conf-dir
               mountPath: /etc/nginx/conf.d
-              readOnly: true
       volumes:
         - name: tmp
           emptyDir: {}
@@ -308,9 +307,8 @@ spec:
           emptyDir: {}
         - name: bootstrap-cache
           emptyDir: {}
-        - name: nginx-conf
-          configMap:
-            name: nexus-nginx-config
+        - name: nginx-conf-dir
+          emptyDir: {}
 ---
 # ------------------------------------------------------------------------------
 # Recurso Ingress con Terminación TLS (ingressClassName: nginx)

@@ -243,10 +243,7 @@ spec:
                   name: mongodb-secret
                   key: MONGO_INITDB_ROOT_PASSWORD
             - name: MONGO_INITDB_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: mongodb-secret
-                  key: MONGODB_DATABASE
+              value: "nexus"
           resources:
             requests:
               cpu: 250m
