@@ -304,6 +304,10 @@ spec:
               mountPath: /var/run
             - name: nginx-conf
               mountPath: /etc/nginx/conf.d
+            - name: nginx-template
+              mountPath: /etc/nginx/templates/default.conf.template
+              subPath: default.conf
+              readOnly: true
       volumes:
         - name: tmp
           emptyDir: {}
@@ -317,6 +321,9 @@ spec:
           emptyDir: {}
         - name: nginx-conf
           emptyDir: {}
+        - name: nginx-template
+          configMap:
+            name: nexus-nginx-config
 ---
 # ------------------------------------------------------------------------------
 # Recurso Ingress con Terminación TLS (ingressClassName: nginx)
