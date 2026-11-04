@@ -1,0 +1,50 @@
+# ==============================================================================
+# patches-dev.yaml
+# Ajustes específicos para el ambiente de Desarrollo (nexus-dev)
+# ==============================================================================
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: nexus-resource-quota
+spec:
+  hard:
+    requests.cpu: "2"
+    requests.memory: 4Gi
+    limits.cpu: "4"
+    limits.memory: 8Gi
+    persistentvolumeclaims: "5"
+    pods: "15"
+    services: "10"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nexus-config
+data:
+  APP_ENV: "development"
+  APP_DEBUG: "true"
+  APP_URL: "https://dev.nexus.internal"
+  LOG_LEVEL: "debug"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nexus-ingress
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - dev.nexus.internal
+      secretName: dev-nexus-tls
+  rules:
+    - host: dev.nexus.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nexus-frontend-svc
+                port:
+                  number: 8080
+

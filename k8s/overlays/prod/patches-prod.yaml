@@ -1,0 +1,160 @@
+# ==============================================================================
+# patches-prod.yaml
+# Parches de Producción:
+#   - ResourceQuota dimensionado para HA y autoescalado (hasta 6 réplicas backend)
+#   - nodeSelector (avx-support: "true") en MySQL y MongoDB (nodo k8s-prod-w1)
+#   - podAntiAffinity + topologySpreadConstraints en frontend y backend para
+#     distribuir las réplicas entre k8s-prod-w1 y k8s-prod-w2
+#   - Ingress prod.nexus.internal con secreto TLS prod-nexus-tls
+# ==============================================================================
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: nexus-resource-quota
+spec:
+  hard:
+    requests.cpu: "6"
+    requests.memory: 10Gi
+    limits.cpu: "12"
+    limits.memory: 16Gi
+    persistentvolumeclaims: "6"
+    pods: "25"
+    services: "10"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nexus-config
+data:
+  APP_ENV: "production"
+  APP_DEBUG: "false"
+  APP_URL: "https://prod.nexus.internal"
+  LOG_LEVEL: "info"
+---
+# ------------------------------------------------------------------------------
+# StatefulSet MySQL: fijar en nodo con soporte AVX (k8s-prod-w1)
+# ------------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  template:
+    spec:
+      nodeSelector:
+        avx-support: "true"
+---
+# ------------------------------------------------------------------------------
+# StatefulSet MongoDB: fijar en nodo con soporte AVX (k8s-prod-w1)
+# ------------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+spec:
+  template:
+    spec:
+      nodeSelector:
+        avx-support: "true"
+---
+# ------------------------------------------------------------------------------
+# Deployment nexus-backend: Mínimo 2 réplicas distribuidas entre k8s-prod-w1 y k8s-prod-w2
+# ------------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-backend
+spec:
+  replicas: 2
+  template:
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k8s-prod-w1
+                      - k8s-prod-w2
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: nexus-backend
+                topologyKey: kubernetes.io/hostname
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: nexus-backend
+---
+# ------------------------------------------------------------------------------
+# Deployment nexus-frontend: Mínimo 2 réplicas distribuidas entre k8s-prod-w1 y k8s-prod-w2
+# ------------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-frontend
+spec:
+  replicas: 2
+  template:
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values:
+                      - k8s-prod-w1
+                      - k8s-prod-w2
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: nexus-frontend
+                topologyKey: kubernetes.io/hostname
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: nexus-frontend
+---
+# ------------------------------------------------------------------------------
+# Ingress Producción: prod.nexus.internal con secreto TLS prod-nexus-tls
+# ------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nexus-ingress
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - prod.nexus.internal
+      secretName: prod-nexus-tls
+  rules:
+    - host: prod.nexus.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nexus-frontend-svc
+                port:
+                  number: 8080
+

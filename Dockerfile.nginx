@@ -25,7 +25,7 @@ COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY docker/nginx/default.conf /etc/nginx/templates/default.conf.template
 
 # Variable por defecto para el servicio de PHP-FPM en Kubernetes/Docker
-ENV PHP_FPM_HOST=127.0.0.1
+ENV PHP_FPM_HOST=nexus-backend-svc
 
 # 3. Copiar únicamente los archivos públicos compilados
 WORKDIR /var/www/html

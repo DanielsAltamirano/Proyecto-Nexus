@@ -1,0 +1,79 @@
+# ==============================================================================
+# ha-autoscaling.yaml
+# Alta Disponibilidad en Producción: HPA (autoscaling/v2) y PodDisruptionBudgets
+# Proyecto: Nexus ERP (nexus-prod)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# HorizontalPodAutoscaler (autoscaling/v2) sobre nexus-backend
+# Escala entre 2 y 6 réplicas con objetivo de utilización de CPU del 60%
+# ------------------------------------------------------------------------------
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nexus-backend-hpa
+  labels:
+    app: nexus-backend
+    app.kubernetes.io/name: nexus-backend-hpa
+    app.kubernetes.io/component: autoscaler
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nexus-backend
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 180
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Pods
+          value: 2
+          periodSeconds: 30
+---
+# ------------------------------------------------------------------------------
+# PodDisruptionBudget para nexus-backend (minAvailable: 1)
+# ------------------------------------------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nexus-backend-pdb
+  labels:
+    app: nexus-backend
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nexus-backend
+---
+# ------------------------------------------------------------------------------
+# PodDisruptionBudget para nexus-frontend (minAvailable: 1)
+# ------------------------------------------------------------------------------
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nexus-frontend-pdb
+  labels:
+    app: nexus-frontend
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nexus-frontend
+

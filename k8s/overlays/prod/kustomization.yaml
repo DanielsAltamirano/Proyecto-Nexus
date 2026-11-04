@@ -1,0 +1,31 @@
+# ==============================================================================
+# kustomization.yaml - Overlay de Producción (nexus-prod)
+# ==============================================================================
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nexus-prod
+
+resources:
+  - ../../base
+  - ha-autoscaling.yaml
+
+replicas:
+  - name: nexus-frontend
+    count: 2
+  - name: nexus-backend
+    count: 2
+
+patches:
+  - path: patches-prod.yaml
+  - target:
+      kind: Namespace
+      name: nexus-base
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: nexus-prod
+      - op: add
+        path: /metadata/labels/environment
+        value: prod
+

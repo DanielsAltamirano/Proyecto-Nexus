@@ -1,0 +1,347 @@
+# ==============================================================================
+# 03-application.yaml
+# Capa de Aplicación Stateless, Servicios, Sondas e Ingress TLS
+# Proyecto: Nexus ERP
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Servicio Interno Backend PHP-FPM (Puerto 9000)
+# ------------------------------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-backend-svc
+  labels:
+    app: nexus-backend
+    app.kubernetes.io/name: nexus-backend
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  type: ClusterIP
+  ports:
+    - name: fastcgi
+      port: 9000
+      targetPort: 9000
+      protocol: TCP
+  selector:
+    app: nexus-backend
+---
+# ------------------------------------------------------------------------------
+# Deployment Backend Stateless (Laravel PHP-FPM 8.3 - UID 10001)
+# ------------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-backend
+  labels:
+    app: nexus-backend
+    app.kubernetes.io/name: nexus-backend
+    app.kubernetes.io/component: backend
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: nexus-backend
+  template:
+    metadata:
+      labels:
+        app: nexus-backend
+        app.kubernetes.io/name: nexus-backend
+        app.kubernetes.io/component: backend
+        app.kubernetes.io/part-of: nexus-erp
+        db-access: "true"
+    spec:
+      serviceAccountName: nexus-app-sa
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        - name: init-storage-dirs
+          image: danielsaltamirano/nexus-php:1.0.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /var/www/html/storage/framework/sessions \
+                       /var/www/html/storage/framework/views \
+                       /var/www/html/storage/framework/cache/data \
+                       /var/www/html/storage/logs
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          volumeMounts:
+            - name: storage
+              mountPath: /var/www/html/storage
+            - name: bootstrap-cache
+              mountPath: /var/www/html/bootstrap/cache
+            - name: tmp
+              mountPath: /tmp
+      containers:
+        - name: php-fpm
+          image: danielsaltamirano/nexus-php:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: fastcgi
+              containerPort: 9000
+              protocol: TCP
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          envFrom:
+            - configMapRef:
+                name: nexus-config
+            - secretRef:
+                name: nexus-app-secret
+          resources:
+            requests:
+              cpu: 150m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          # startupProbe: otorga margen de arranque al pool de PHP-FPM
+          startupProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 3
+            periodSeconds: 3
+            failureThreshold: 20
+          # readinessProbe: verifica que el socket FastCGI acepte conexiones
+          readinessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          # livenessProbe: evalúa únicamente el proceso PHP-FPM local (puerto 9000)
+          # sin consultar MySQL ni MongoDB para evitar reinicios en cascada si cae la BD
+          livenessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 3
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: storage
+              mountPath: /var/www/html/storage
+            - name: bootstrap-cache
+              mountPath: /var/www/html/bootstrap/cache
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: storage
+          emptyDir: {}
+        - name: bootstrap-cache
+          emptyDir: {}
+---
+# ------------------------------------------------------------------------------
+# Servicio Interno Frontend Nginx (Puerto 8080)
+# ------------------------------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-frontend-svc
+  labels:
+    app: nexus-frontend
+    app.kubernetes.io/name: nexus-frontend
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: nexus-frontend
+---
+# ------------------------------------------------------------------------------
+# Deployment Frontend Reverse Proxy (Nginx 1.27 Alpine - UID 10001)
+# ------------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus-frontend
+  labels:
+    app: nexus-frontend
+    app.kubernetes.io/name: nexus-frontend
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: nexus-frontend
+  template:
+    metadata:
+      labels:
+        app: nexus-frontend
+        app.kubernetes.io/name: nexus-frontend
+        app.kubernetes.io/component: frontend
+        app.kubernetes.io/part-of: nexus-erp
+    spec:
+      serviceAccountName: nexus-app-sa
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: nginx
+          image: danielsaltamirano/nexus-nginx:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          env:
+            - name: PHP_FPM_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: nexus-config
+                  key: PHP_FPM_HOST
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 3
+            failureThreshold: 15
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          # livenessProbe: consulta /healthz servido directamente por Nginx en memoria,
+          # evitando invocar PHP-FPM o la base de datos si ésta sufre una caída temporal
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 3
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: storage
+              mountPath: /var/www/html/storage
+            - name: bootstrap-cache
+              mountPath: /var/www/html/bootstrap/cache
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d
+              readOnly: true
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: storage
+          emptyDir: {}
+        - name: bootstrap-cache
+          emptyDir: {}
+        - name: nginx-conf
+          configMap:
+            name: nexus-nginx-config
+---
+# ------------------------------------------------------------------------------
+# Recurso Ingress con Terminación TLS (ingressClassName: nginx)
+# ------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nexus-ingress
+  labels:
+    app.kubernetes.io/name: nexus-ingress
+    app.kubernetes.io/part-of: nexus-erp
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - prod.nexus.internal
+      secretName: prod-nexus-tls
+  rules:
+    - host: prod.nexus.internal
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nexus-frontend-svc
+                port:
+                  number: 8080
+

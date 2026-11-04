@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - 01-security-and-quotas.yaml
+  - 02-databases.yaml
+  - 03-application.yaml
+  - ../network
+  - ../backups
+
+images:
+  - name: danielsaltamirano/nexus-php
+    newTag: "1.0.0"
+  - name: danielsaltamirano/nexus-nginx
+    newTag: "1.0.0"
+

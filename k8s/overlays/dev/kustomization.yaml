@@ -1,0 +1,30 @@
+# ==============================================================================
+# kustomization.yaml - Overlay de Desarrollo (nexus-dev)
+# ==============================================================================
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: nexus-dev
+
+resources:
+  - ../../base
+
+replicas:
+  - name: nexus-frontend
+    count: 1
+  - name: nexus-backend
+    count: 1
+
+patches:
+  - path: patches-dev.yaml
+  - target:
+      kind: Namespace
+      name: nexus-base
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: nexus-dev
+      - op: add
+        path: /metadata/labels/environment
+        value: dev
+

@@ -1,0 +1,227 @@
+# ==============================================================================
+# network-policies.yaml
+# Microsegmentación Zero-Trust de Red (Ingress y Egress)
+# Proyecto: Nexus ERP
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Política Base: Denegar todo el tráfico Ingress y Egress por defecto
+# ------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  labels:
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+# ------------------------------------------------------------------------------
+# 2. Permitir resolución DNS (Egress de todos los Pods hacia kube-system en 53 UDP/TCP)
+# ------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns-egress
+  labels:
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+# ------------------------------------------------------------------------------
+# 3. Tráfico hacia y desde nexus-frontend (Nginx)
+#    - Ingress: desde Ingress Controller (ingress-nginx) hacia TCP 8080
+#    - Egress: hacia nexus-backend en TCP 9000
+# ------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-traffic
+  labels:
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  podSelector:
+    matchLabels:
+      app: nexus-frontend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: nexus-backend
+      ports:
+        - protocol: TCP
+          port: 9000
+---
+# ------------------------------------------------------------------------------
+# 4. Tráfico hacia y desde nexus-backend (PHP-FPM), Migraciones y Outbox
+#    - Ingress (en nexus-backend): únicamente desde nexus-frontend en TCP 9000
+#    - Egress: hacia MySQL (TCP 3306) y MongoDB (TCP 27017)
+# ------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-traffic
+  labels:
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  podSelector:
+    matchLabels:
+      app: nexus-backend
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: nexus-frontend
+      ports:
+        - protocol: TCP
+          port: 9000
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: mysql
+      ports:
+        - protocol: TCP
+          port: 3306
+    - to:
+        - podSelector:
+            matchLabels:
+              app: mongodb
+      ports:
+        - protocol: TCP
+          port: 27017
+---
+# ------------------------------------------------------------------------------
+# 5. Egress autorizado para Jobs de Migración, Outbox y CronJobs de Respaldo
+#    hacia MySQL (TCP 3306) y MongoDB (TCP 27017)
+# ------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-jobs-and-backups-db-egress
+  labels:
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - nexus-migrations-seed
+          - nexus-outbox-retry
+          - mysql-backup
+          - mongodb-backup
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: mysql
+      ports:
+        - protocol: TCP
+          port: 3306
+    - to:
+        - podSelector:
+            matchLabels:
+              app: mongodb
+      ports:
+        - protocol: TCP
+          port: 27017
+---
+# ------------------------------------------------------------------------------
+# 6. Ingress exclusivo hacia MySQL (TCP 3306)
+#    Solo permite conexiones desde nexus-backend, nexus-migrations-seed,
+#    nexus-outbox-retry y mysql-backup
+# ------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-mysql-ingress
+  labels:
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  podSelector:
+    matchLabels:
+      app: mysql
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - nexus-backend
+                  - nexus-migrations-seed
+                  - nexus-outbox-retry
+                  - mysql-backup
+      ports:
+        - protocol: TCP
+          port: 3306
+---
+# ------------------------------------------------------------------------------
+# 7. Ingress exclusivo hacia MongoDB (TCP 27017)
+#    Solo permite conexiones desde nexus-backend, nexus-migrations-seed,
+#    nexus-outbox-retry y mongodb-backup
+# ------------------------------------------------------------------------------
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-mongodb-ingress
+  labels:
+    app.kubernetes.io/part-of: nexus-erp
+spec:
+  podSelector:
+    matchLabels:
+      app: mongodb
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - nexus-backend
+                  - nexus-migrations-seed
+                  - nexus-outbox-retry
+                  - mongodb-backup
+      ports:
+        - protocol: TCP
+          port: 27017
+
