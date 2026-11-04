@@ -200,7 +200,7 @@ data:
   DB_CONNECTION: "mysql"
   DB_HOST: "mysql-svc"
   DB_PORT: "3306"
-  DB_DATABASE: "nexus_db"
+  DB_DATABASE: "nexus"
   MONGODB_HOST: "mongodb-svc"
   MONGODB_PORT: "27017"
   MONGODB_DATABASE: "nexus_audit"

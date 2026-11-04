@@ -106,6 +106,7 @@ kubectl -n "${NAMESPACE}" run mongodb-restore-verifier \
         "image": "mongo:7.0",
         "command": ["sh", "-c", "set -euo pipefail; echo \"Restaurando archivo comprimido '"${MONGO_BACKUP_FILE}"' hacia base aislada nexus_audit_restore_test...\"; mongorestore --host mongodb-svc --port 27017 --username \"${MONGO_INITDB_ROOT_USERNAME}\" --password \"${MONGO_INITDB_ROOT_PASSWORD}\" --authenticationDatabase admin --archive=\"'"${MONGO_BACKUP_FILE}"'\" --gzip --nsFrom=\"${MONGODB_DATABASE}.*\" --nsTo=\"nexus_audit_restore_test.*\" --drop; mongosh --host mongodb-svc --port 27017 -u \"${MONGO_INITDB_ROOT_USERNAME}\" -p \"${MONGO_INITDB_ROOT_PASSWORD}\" --authenticationDatabase admin --eval \"db.getSiblingDB('\''nexus_audit_restore_test'\'').getCollectionNames(); db.getSiblingDB('\''nexus_audit_restore_test'\'').dropDatabase();\""],
         "envFrom": [{ "secretRef": { "name": "mongodb-secret" } }],
+        "env": [{ "name": "MONGODB_DATABASE", "valueFrom": { "configMapKeyRef": { "name": "nexus-config", "key": "MONGODB_DATABASE" } } }],
         "resources": {
           "requests": { "cpu": "50m", "memory": "64Mi" },
           "limits": { "cpu": "250m", "memory": "256Mi" }

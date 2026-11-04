@@ -69,7 +69,7 @@ kubectl @KubeArgs label namespace $Namespace `
 
 # 2. Generar credenciales aleatorias seguras en memoria
 $MysqlRootPassword = if ($env:MYSQL_ROOT_PASSWORD) { $env:MYSQL_ROOT_PASSWORD } else { New-RandomHex -Bytes 20 }
-$MysqlDatabase     = if ($env:MYSQL_DATABASE)     { $env:MYSQL_DATABASE }     else { "nexus_db" }
+$MysqlDatabase     = if ($env:MYSQL_DATABASE)     { $env:MYSQL_DATABASE }     else { "nexus" }
 $MysqlUser         = if ($env:MYSQL_USER)         { $env:MYSQL_USER }         else { "nexus_user" }
 $MysqlPassword     = if ($env:MYSQL_PASSWORD)     { $env:MYSQL_PASSWORD }     else { New-RandomHex -Bytes 20 }
 

@@ -55,7 +55,7 @@ kubectl "${KUBECTL_ARGS[@]}" label namespace "${NAMESPACE}" \
 
 # 2. Generar contraseñas criptográficamente seguras (o usar variables de entorno si se proveen)
 MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-$(openssl rand -hex 20)}"
-MYSQL_DATABASE="${MYSQL_DATABASE:-nexus_db}"
+MYSQL_DATABASE="${MYSQL_DATABASE:-nexus}"
 MYSQL_USER="${MYSQL_USER:-nexus_user}"
 MYSQL_PASSWORD="${MYSQL_PASSWORD:-$(openssl rand -hex 20)}"
 
